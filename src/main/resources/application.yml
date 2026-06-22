@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: StreamerUniversity
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+
+# ── Telegram ──────────────────────────────────────────────────────────
+telegram:
+  bot:
+    token: ${TELEGRAM_TOKEN}
+    username: StreamerUniversityNews_bot
+
+brevo:
+  api:
+    key: ${BREVO_KEY}
+  to:
+    email: streamernews277@gmail.com
+  from:
+    email: streamernews277@gmail.com
+    name: Streamer University
