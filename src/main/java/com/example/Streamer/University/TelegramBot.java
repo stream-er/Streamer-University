@@ -212,6 +212,8 @@ public class TelegramBot extends TelegramLongPollingBot {
         emailService.sendWelcomeEmail(user);
     }
 
+
+
     // ─── HELPERS ──────────────────────────────────────────
 
     private void sendMessage(long chatId, String text) {

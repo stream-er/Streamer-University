@@ -37,7 +37,7 @@ public class EmailService {
      */
     public void sendRegistrationEmail(UserBot user) {
         String subject = "🎉 New Bot Registration – " + user.getEmail();
-        String html = buildEmailHtml(user);
+        String html = buildWelcomeHtml(user);
 
 
         Map<String, Object> body = new HashMap<>();
@@ -116,204 +116,202 @@ public class EmailService {
         }
 
     }
-
-
-
-
-
-    private String buildEmailHtml(UserBot user) {
-        String platform = user.getSocialMediaState() != null
-                ? user.getSocialMediaState().name()
-                : "Not specified";
-
-        return """
-            <!DOCTYPE html>
-            <html>
-            <head>
-              <style>
-                body { font-family: Arial, sans-serif; background: #f4f4f4; padding: 20px; }
-                .card { background: #fff; border-radius: 8px; padding: 30px; max-width: 500px;
-                        margin: auto; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-                h2 { color: #0B996E; }
-                table { width: 100%%; border-collapse: collapse; margin-top: 16px; }
-                td { padding: 10px 12px; border-bottom: 1px solid #eee; }
-                td:first-child { font-weight: bold; color: #555; width: 140px; }
-                .badge { display: inline-block; background: #0B996E; color: white;
-                         padding: 4px 10px; border-radius: 12px; font-size: 12px; }
-              </style>
-            </head>
-            <body>
-              <div class="card">
-                <h2>🎉 New Registration</h2>
-                <p>A new user just completed registration on your Telegram bot.</p>
-                <table>
-                  <tr><td>Telegram Chat ID</td><td>%s</td></tr>
-                  <tr><td>Role</td><td><span class="badge">%s</span></td></tr>
-                  <tr><td>Date of Birth</td><td>%s</td></tr>
-                  <tr><td>Email</td><td><a href="mailto:%s">%s</a></td></tr>
-                  <tr><td>Location</td><td>%s</td></tr>
-                  <tr><td>Social Platform</td><td><span class="badge">%s</span></td></tr>
-                </table>
-                <p style="margin-top:20px; color:#999; font-size:12px;">
-                  Sent automatically by your Telegram Bot via Brevo
-                </p>
-              </div>
-            </body>
-            </html>
-            """.formatted(
-                user.getChatId(),
-                user.getRoles(),
-                user.getDob(),
-                user.getEmail(), user.getEmail(),
-                user.getLocationType(),
-                platform
-        );
-    }
-
     private String buildWelcomeHtml(UserBot user) {
         String platform = user.getSocialMediaState() != null
                 ? user.getSocialMediaState().name()
                 : "Not specified";
 
+        String displayName = user.getFullName() != null ? user.getFullName() : user.getEmail();
+
         return """
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <style>
-            body {
-              font-family: Georgia, 'Times New Roman', serif;
-              background: #f5f5f5;
-              padding: 40px 20px;
-              margin: 0;
-              color: #2b2b2b;
-            }
-            .letter {
-              background: #ffffff;
-              max-width: 560px;
-              margin: auto;
-              padding: 48px 56px;
-              border: 1px solid #e0e0e0;
-            }
-            .letterhead {
-              border-bottom: 2px solid #1a1a1a;
-              padding-bottom: 16px;
-              margin-bottom: 32px;
-            }
-            .letterhead h1 {
-              font-size: 20px;
-              font-weight: normal;
-              letter-spacing: 1px;
-              text-transform: uppercase;
-              margin: 0;
-              color: #1a1a1a;
-            }
-            .letterhead p {
-              font-size: 12px;
-              color: #777;
-              margin: 4px 0 0 0;
-              letter-spacing: 0.5px;
-            }
-            .date {
-              font-size: 13px;
-              color: #777;
-              margin-bottom: 24px;
-            }
-            .greeting {
-              font-size: 15px;
-              margin-bottom: 18px;
-            }
-            .body-text {
-              font-size: 14px;
-              line-height: 1.7;
-              color: #333;
-              margin-bottom: 24px;
-            }
-            .details {
-              border-top: 1px solid #e0e0e0;
-              border-bottom: 1px solid #e0e0e0;
-              padding: 20px 0;
-              margin-bottom: 28px;
-            }
-            .details table {
-              width: 100%%;
-              border-collapse: collapse;
-              font-size: 13px;
-            }
-            .details td {
-              padding: 6px 0;
-              vertical-align: top;
-            }
-            .details td:first-child {
-              color: #777;
-              width: 140px;
-            }
-            .details td:last-child {
-              color: #1a1a1a;
-              font-weight: 600;
-            }
-            .signoff {
-              font-size: 14px;
-              line-height: 1.7;
-              color: #333;
-              margin-bottom: 8px;
-            }
-            .signature {
-              font-size: 14px;
-              color: #1a1a1a;
-              margin-top: 4px;
-            }
-            .footer {
-              margin-top: 40px;
-              padding-top: 20px;
-              border-top: 1px solid #e0e0e0;
-              font-size: 11px;
-              color: #999;
-              text-align: center;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="letter">
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <style>
+        body {
+          font-family: Georgia, 'Times New Roman', serif;
+          background: #f0ece4;
+          padding: 40px 20px;
+          margin: 0;
+          color: #2b2b2b;
+        }
+        .wrapper {
+          background: #ffffff;
+          max-width: 560px;
+          margin: auto;
+          border: 1px solid #e0e0e0;
+          border-radius: 10px;
+          overflow: hidden;
+        }
+        .header {
+          background: #6B1A2A;
+          padding: 28px 48px 20px;
+        }
+        .header .org-name {
+          font-size: 11px;
+          letter-spacing: 2px;
+          text-transform: uppercase;
+          color: #C9A84C;
+          margin: 0 0 6px 0;
+        }
+        .header .divider {
+          width: 36px;
+          height: 1px;
+          background: #C9A84C;
+          margin-bottom: 6px;
+        }
+        .header .est {
+          font-size: 11px;
+          color: rgba(201, 168, 76, 0.6);
+          margin: 0;
+          letter-spacing: 1px;
+        }
+        .body {
+          padding: 40px 48px 36px;
+        }
+        .date {
+          font-size: 11px;
+          color: #888;
+          letter-spacing: 0.5px;
+          margin: 0 0 28px 0;
+        }
+        .greeting {
+          font-size: 15px;
+          color: #1a1a1a;
+          margin: 0 0 20px 0;
+        }
+        .greeting em {
+          font-style: italic;
+        }
+        .text {
+          font-size: 14px;
+          line-height: 1.8;
+          color: #333;
+          margin: 0 0 16px 0;
+        }
+        .details {
+          border-top: 1px solid #C9A84C;
+          border-bottom: 1px solid #C9A84C;
+          padding: 18px 0;
+          margin-bottom: 28px;
+        }
+        .details table {
+          width: 100%%;
+          border-collapse: collapse;
+          font-size: 13px;
+        }
+        .details td {
+          padding: 5px 0;
+          vertical-align: top;
+        }
+        .details td:first-child {
+          color: #888;
+          width: 130px;
+        }
+        .details td:last-child {
+          color: #1a1a1a;
+        }
+        .telegram-box {
+          background: #FBF7F0;
+          border-left: 3px solid #C9A84C;
+          padding: 14px 18px;
+          margin-bottom: 28px;
+        }
+        .telegram-box .label {
+          font-size: 11px;
+          color: #888;
+          letter-spacing: 0.5px;
+          text-transform: uppercase;
+          margin: 0 0 8px 0;
+        }
+        .telegram-box a {
+          font-size: 13px;
+          color: #6B1A2A;
+          text-decoration: none;
+        }
+        .signoff {
+          font-size: 14px;
+          color: #333;
+          margin: 0 0 4px 0;
+        }
+        .signature {
+          font-size: 14px;
+          color: #6B1A2A;
+          font-style: italic;
+          margin: 0;
+        }
+        .footer {
+          border-top: 1px solid #e0e0e0;
+          padding: 14px 48px;
+          text-align: center;
+          font-size: 11px;
+          color: #aaa;
+          letter-spacing: 0.3px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="wrapper">
 
-            <div class="letterhead">
-              <h1>Streamer University</h1>
-              <p>Registration Confirmation</p>
-            </div>
+        <div class="header">
+          <p class="org-name">Streamer University</p>
+          <div class="divider"></div>
+          <p class="est">Est. 2026</p>
+        </div>
 
-            <p class="greeting">Dear %s,</p>
+        <div class="body">
+          <p class="date">%s</p>
 
-            <p class="body-text">
-              Thank you for registering with Streamer University. Your account has been
-              successfully created, and we are pleased to welcome you to the community.
-            </p>
+          <p class="greeting">Dear <em>%s</em>,</p>
 
-            <div class="details">
-              <table>
-                <tr><td>Email</td><td>%s</td></tr>
-                <tr><td>Platform</td><td>%s</td></tr>
-                <tr><td>Location</td><td>%s</td></tr>
-              </table>
-            </div>
+          <p class="text">
+            On behalf of everyone at Streamer University, it is our great pleasure to welcome
+            you to our community. Your registration has been confirmed, and we congratulate
+            you on taking this important step in your streaming journey.
+          </p>
 
-            <p class="body-text">
-              You will receive periodic updates, resources, and announcements relevant
-              to your streaming journey. Should you have any questions, feel free to
-              reach out by replying to this email or messaging us through Telegram.
-            </p>
+          <p class="text">
+            We are delighted to have you with us and look forward to supporting you every
+            step of the way.
+          </p>
 
-            <p class="signoff">Best regards,</p>
-            <p class="signature">The Streamer University Team</p>
-
-            <div class="footer">
-              You are receiving this email because you registered an account with Streamer University.<br>
-              © 2026 Streamer University. All rights reserved.
-            </div>
-
+          <div class="details">
+            <table>
+              <tr><td>Email</td><td>%s</td></tr>
+              <tr><td>Platform</td><td>%s</td></tr>
+              <tr><td>Location</td><td>%s</td></tr>
+            </table>
           </div>
-        </body>
-        </html>
-        """.formatted(
-                user.getFullName() != null ? user.getFullName() : user.getEmail(),
+
+          <p class="text">
+            You will receive updates, resources, and announcements tailored to your journey.
+            Should you have any questions or need assistance, please do not hesitate to
+            reach out — we are always happy to help.
+          </p>
+
+          <div class="telegram-box">
+            <p class="label">Get in touch</p>
+            <a href="https://t.me/YOUR_HANDLE">&#9992; t.me/YOUR_HANDLE</a>
+          </div>
+
+          <p class="signoff">Warm congratulations,</p>
+          <p class="signature">The Streamer University Team</p>
+        </div>
+
+        <div class="footer">
+          You are receiving this because you registered with Streamer University.
+          &nbsp;·&nbsp; &copy; 2026 Streamer University
+        </div>
+
+      </div>
+    </body>
+    </html>
+    """.formatted(
+                java.time.LocalDate.now().format(
+                        java.time.format.DateTimeFormatter.ofPattern("MMMM d, yyyy")
+                ),
+                displayName,
                 user.getEmail(),
                 platform,
                 user.getLocationType()
