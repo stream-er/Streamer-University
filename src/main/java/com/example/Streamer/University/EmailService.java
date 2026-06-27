@@ -43,7 +43,7 @@ public class EmailService {
     public void sendRegistrationEmail(UserBot user) throws IOException {
         String subject = "🎉 New Bot Registration – " + user.getEmail();
         String html = new String(
-                new ClassPathResource("welcome-email.html").getInputStream().readAllBytes(),
+                new ClassPathResource("templates/welcome-email.html").getInputStream().readAllBytes(),
                 StandardCharsets.UTF_8
         );
         html = html.replace("{{name}}",user.getFullName());
@@ -100,7 +100,7 @@ public class EmailService {
         recipient.put("email", user.getEmail());  // ← user's email
         body.put("to", List.of(recipient));
         String html = new String(
-                new ClassPathResource("welcome-email.html").getInputStream().readAllBytes(),
+                new ClassPathResource("templates/welcome-email.html").getInputStream().readAllBytes(),
                 StandardCharsets.UTF_8
         );
         html = html.replace("{{name}}",user.getFullName());
