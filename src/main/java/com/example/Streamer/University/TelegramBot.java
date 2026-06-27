@@ -12,6 +12,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 @Slf4j
@@ -76,7 +77,13 @@ public class TelegramBot extends TelegramLongPollingBot {
             case DOB -> handleDob(user, text);
             case EMAIL -> handleEmail(user, text);
             case LOCATION -> handleLocation(user, text);
-            case SOCIAL_HANDLE -> handleSocailMedia(user, text);   // ✅ added
+            case SOCIAL_HANDLE -> {
+                try {
+                    handleSocailMedia(user, text);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }   // ✅ added
             default -> sendMessage(chatId, "Type /start to begin.");
         }
     }
@@ -196,7 +203,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     }
 
-    private void handleSocailMedia(UserBot user, String text) {
+    private void handleSocailMedia(UserBot user, String text) throws IOException {
         if (text.trim().isEmpty()) {
             sendMessage(user.getChatId(), "Handle can't be empty. Try again:");
             return;
