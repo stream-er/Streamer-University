@@ -6,11 +6,13 @@ package com.example.Streamer.University;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -40,7 +42,10 @@ public class EmailService {
      */
     public void sendRegistrationEmail(UserBot user) throws IOException {
         String subject = "🎉 New Bot Registration – " + user.getEmail();
-        String html = Files.readString(Path.of("welcome-email.html"));
+        String html = new String(
+                new ClassPathResource("welcome-email.html").getInputStream().readAllBytes(),
+                StandardCharsets.UTF_8
+        );
         html = html.replace("{{name}}",user.getFullName());
 
 
@@ -94,7 +99,10 @@ public class EmailService {
         Map<String, String> recipient = new HashMap<>();
         recipient.put("email", user.getEmail());  // ← user's email
         body.put("to", List.of(recipient));
-        String html = Files.readString(Path.of("welcome-email.html"));
+        String html = new String(
+                new ClassPathResource("welcome-email.html").getInputStream().readAllBytes(),
+                StandardCharsets.UTF_8
+        );
         html = html.replace("{{name}}",user.getFullName());
 
         body.put("subject", "Welcome to Streamer University!");
